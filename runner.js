@@ -1,3 +1,5 @@
+var currentTestName;
+
 function $ERROR(message) {
   log('ERROR ' + message);
   errorCount++;
@@ -14,7 +16,7 @@ function $PRINT(message) {
 
 function log(message) {
   var el = document.createElement('p');
-  el.innerHTML = message + '<br>';
+  el.innerHTML = message + ' (<span class="testname">' + currentTestName + '</span>)';
   document.getElementById('log').appendChild(el);
 }
 
@@ -127,6 +129,7 @@ function startTests(tests) {
       var test = tests.shift();
       
       if (!shouldIgnoreTest(test.name)) { 
+        currentTestName = test.name;
         loadScript(test.path);
         testCount++;
       }
