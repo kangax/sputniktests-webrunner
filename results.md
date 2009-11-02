@@ -23,4 +23,4 @@ Internet Explorer 7         5229 completed, 446 failures, 12:21 (need to rerun)
 Internet Explorer 6         5229 completed, 448 failures, 9:07
 Internet Explorer 5.5       5229 completed, 458 failures, 8:58
 
-Konqueror                   -
+Konqueror 4.3.2             5229 completed, 319 failures, 27:50

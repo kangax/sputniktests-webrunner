@@ -3,3 +3,4 @@ p { margin: 0; padding: 0; }
 .description { margin-bottom: 1em; }
 #start-trigger { display: block; margin-bottom: 0.5em; }
 .label { display: inline-block; width: 8em; }
+#options { position: absolute; top: 1.5em; right: 1em; }

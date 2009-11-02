@@ -104,35 +104,41 @@ function shouldIgnoreTest(testName) {
   }
   return false;
 }
+function updateStatus(test) {
+  setStatus([
+    '<span class="label">Current test:</span> ', test.name, 
+    '<br><span class="label">Tests completed:</span> ', testCount,
+    '<br><span class="label">Total errors:</span> ', errorCount,
+    '<br><span class="label">Total failures:</span> ', failCount,
+    '<br><span class="label">Elapsed time:</span> ', prettyTime((new Date() - startTime) / 1000),
+    '<br><span class="label">Status:</span> <span id="status-value">Running tests with <strong>', TEST_DELAY , 'ms</strong> delay</span>', 
+  ].join(''));
+}
+
+function displayScore() {
+  var score = errorCount + failCount /*Math.round(100 - ((errorCount + failCount) * 100 / testCount))*/,
+      scoreMessage = 'Completed. Final score (errors + failures; less is better): <strong>' + score + '</strong>';
+  document.getElementById('status-value').innerHTML = scoreMessage;
+}
 
 function startTests(tests) {
   function loadTests(tests) {
     if (tests.length !== 0) {
       var test = tests.shift();
       
-      setStatus([
-        '<span class="label">Current test:</span> ', test.name, 
-        '<br><span class="label">Tests completed:</span> ', testCount,
-        '<br><span class="label">Total errors:</span> ', errorCount,
-        '<br><span class="label">Total failures:</span> ', failCount,
-        '<br><span class="label">Elapsed time:</span> ', prettyTime((new Date() - startTime) / 1000),
-        '<br><span class="label">Status:</span> <span id="status-value">Running...</span>', 
-      ].join(''));
-      
-      if (!shouldIgnoreTest(test.name)) {
+      if (!shouldIgnoreTest(test.name)) { 
         loadScript(test.path);
         testCount++;
       }
+      
+      updateStatus(test);
       
       setTimeout(function(){
         loadTests(tests);
       }, TEST_DELAY);
     }
     else {
-      var score = Math.round(100 - ((errorCount + failCount) * 100 / testCount)),
-          scoreMessage = 'Completed. Final score (ratio of tests to failures/errors): <strong>' + score + '%</strong>';
-          
-      document.getElementById('status-value').innerHTML = scoreMessage;
+      displayScore();
     }
   } 
   loadTests(tests);
@@ -5853,8 +5859,14 @@ addTests('15_Native_ECMA_Script_Objects/15.11_Error_Objects/15.11.4_Properties_o
   "S15.11.4_A3"     ,
   "S15.11.4_A4"     ]);
 
-var startTriggerEl = document.getElementById('start-trigger'), startTime;
+var startTriggerEl = document.getElementById('start-trigger'), 
+    testDelayValueEl = document.getElementById('test-delay'),
+    startTime;
 startTriggerEl.onclick = function() {
+  var testDelay = parseInt(testDelayValueEl.value, 10);
+  if (!isNaN(testDelay) && testDelay > 0) {
+    TEST_DELAY = testDelay;
+  }
   startTriggerEl.parentNode.removeChild(startTriggerEl);
   startTime = new Date();
   startTests(testsQueue);
