@@ -108,12 +108,13 @@ function shouldIgnoreTest(testName) {
 }
 function updateStatus(test) {
   setStatus([
-    '<span class="label">Current test:</span> ', test.name, 
-    '<br><span class="label">Tests completed:</span> ', testCount,
-    '<br><span class="label">Total errors:</span> ', errorCount,
-    '<br><span class="label">Total failures:</span> ', failCount,
-    '<br><span class="label">Elapsed time:</span> ', prettyTime((new Date() - startTime) / 1000),
-    '<br><span class="label">Status:</span> <span id="status-value">Running tests with <strong>', TEST_DELAY , 'ms</strong> delay</span>', 
+    '<ul>',
+      '<li><span class="label">Current test:</span> ', test.name, 
+      '</li><li><span class="label">Tests completed:</span> ', testCount,
+      '</li><li><span class="label">Total errors:</span> ', errorCount,
+      '</li><li><span class="label">Total failures:</span> ', failCount,
+      '</li><li><span class="label">Elapsed time:</span> ', prettyTime((new Date() - startTime) / 1000),
+      '</li><li><span class="label">Status:</span> <span id="status-value">Running tests with <strong>', TEST_DELAY , 'ms</strong> delay</span></li></ul>', 
   ].join(''));
 }
 
