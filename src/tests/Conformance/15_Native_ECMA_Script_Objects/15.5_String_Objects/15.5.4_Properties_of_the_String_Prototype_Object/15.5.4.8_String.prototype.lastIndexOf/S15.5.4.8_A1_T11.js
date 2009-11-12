@@ -8,7 +8,7 @@
 * @description: Instance is Date(0) object;
 */
 
-__instance = new Date(0);
+__instance = new Date(100000000);
 
 __instance.lastIndexOf = String.prototype.lastIndexOf;
 

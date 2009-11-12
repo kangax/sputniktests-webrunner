@@ -13,10 +13,9 @@
 
 //CHECK#1
 try {
-  $ERROR('#1.1: /[\\x0061d-G]/.exec("1") throw SyntaxError. Actual: ' + (/[\x0061d-G]/.exec("1")));
+  $ERROR('#1.1: /[\\x0061d-G]/.exec("1") throw SyntaxError. Actual: ' + (new RegExp("[\\x0061d-G]").exec("1")));
 } catch (e) {
   if((e instanceof SyntaxError) !== true){
     $ERROR('#1.2: /[\\x0061d-G]/.exec("1") throw SyntaxError. Actual: ' + (e));
   }
 }
-

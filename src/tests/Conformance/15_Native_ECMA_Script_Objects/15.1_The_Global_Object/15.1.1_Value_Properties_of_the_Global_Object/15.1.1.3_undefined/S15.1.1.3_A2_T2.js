@@ -11,5 +11,5 @@
 // CHECK#1
 undefined = true;
 if (typeof(undefined) !== "boolean") { 
-	$ERROR('#1: undefined = true; typeof(undefined) === "boolean". Actual: ' + (typeof(undefined)));	
+	ERROR('#1: undefined = true; typeof(undefined) === "boolean". Actual: ' + (typeof(undefined)));	
 }

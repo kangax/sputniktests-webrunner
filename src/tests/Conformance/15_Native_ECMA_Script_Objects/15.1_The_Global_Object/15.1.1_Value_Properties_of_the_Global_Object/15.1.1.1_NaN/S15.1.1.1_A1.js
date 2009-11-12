@@ -22,3 +22,4 @@ if (isNaN(NaN) !== true) {
 if (isFinite(NaN) !== false) {
 	$ERROR('#3: NaN === Not-a-Finite. Actual: ' + (NaN)); 
 }
+

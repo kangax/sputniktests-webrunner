@@ -13,10 +13,9 @@
 
 //CHECK#1
 try {
-  $ERROR('#1.1: /[\\c0001d-G]/.exec("1") throw SyntaxError. Actual: ' + (/[\c0001d-G]/.exec("1")));
+  $ERROR('#1.1: /[\\c0001d-G]/.exec("1") throw SyntaxError. Actual: ' + (new RegExp("[\\c0001d-G]").exec("1")));
 } catch (e) {
   if((e instanceof SyntaxError) !== true){
     $ERROR('#1.2: /[\\c0001d-G]/.exec("1") throw SyntaxError. Actual: ' + (e));
   }
 }
-

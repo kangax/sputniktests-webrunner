@@ -13,10 +13,9 @@
 
 //CHECK#1
 try {
-  $ERROR('#1.1: /[b-G\\w]/.exec("a") throw SyntaxError. Actual: ' + (/[b-G\w]/.exec("a")));
+  $ERROR('#1.1: /[b-G\\w]/.exec("a") throw SyntaxError. Actual: ' + (new RegExp("[b-G\\w]").exec("a")));
 } catch (e) {
   if((e instanceof SyntaxError) !== true){
     $ERROR('#1.2: /[b-G\\w]/.exec("a") throw SyntaxError. Actual: ' + (e));
   }
 }
-

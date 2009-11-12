@@ -13,10 +13,9 @@
 
 //CHECK#1
 try {
-  $ERROR('#1.1: /[c-eb-a]/.exec("a") throw SyntaxError. Actual: ' + (/[c-eb-a]/.exec("a")));
+  $ERROR('#1.1: /[c-eb-a]/.exec("a") throw SyntaxError. Actual: ' + (new RegExp("[c-eb-a]").exec("a")));
 } catch (e) {
   if((e instanceof SyntaxError) !== true){
     $ERROR('#1.2: /[c-eb-a]/.exec("a") throw SyntaxError. Actual: ' + (e));
   }
 }
-

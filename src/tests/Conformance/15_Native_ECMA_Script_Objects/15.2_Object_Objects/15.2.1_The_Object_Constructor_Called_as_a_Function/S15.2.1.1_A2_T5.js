@@ -20,11 +20,11 @@ obj = Object(num);
 
 //CHECK#2
 if (obj.constructor !== Number) {
-  $ERROR('#2: Object(Infinity) returns ToObject(Infinity)');
+  $ERROR('#2: Object(NaN) returns ToObject(NaN)');
 }
 
 //CHECK#3
 if (typeof obj!=="object") {
-  $ERROR('#2: Object(Infinity) returns ToObject(Infinity)');
+  $ERROR('#2: Object(NaN) returns ToObject(NaN)');
 }
 //
