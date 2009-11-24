@@ -5863,15 +5863,19 @@ addTests('15_Native_ECMA_Script_Objects/15.11_Error_Objects/15.11.4_Properties_o
   "S15.11.4_A3"     ,
   "S15.11.4_A4"     ]);
 
-var startTriggerEl = document.getElementById('start-trigger'), 
-    testDelayValueEl = document.getElementById('test-delay'),
-    startTime;
-startTriggerEl.onclick = function() {
-  var testDelay = parseInt(testDelayValueEl.value, 10);
-  if (!isNaN(testDelay) && testDelay > 0) {
-    TEST_DELAY = testDelay;
-  }
-  startTriggerEl.parentNode.removeChild(startTriggerEl);
-  startTime = new Date();
-  startTests(testsQueue);
-};
+
+(function(){
+  var formEl = document.forms[0],
+      testDelayValueEl = document.getElementById('test-delay'),
+      startTime;
+  formEl.onsubmit = function() {
+    var testDelay = parseInt(testDelayValueEl.value, 10);
+    if (!isNaN(testDelay) && testDelay > 0) {
+      TEST_DELAY = testDelay;
+    }
+    formEl.parentNode.removeChild(formEl);
+    startTime = new Date();
+    startTests(testsQueue);
+    return false;
+  };
+})();

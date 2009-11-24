@@ -5,7 +5,5 @@ ul { padding-left: 1em; }
 #log { font-family: Courier, monospace; background: #fee; border: 1px solid #faa; padding: 0.5em; margin-top: 1em; font-size: 85%; height: 40em; overflow: scroll; }
 #log p { line-height: 1em; }
 .description { margin-bottom: 1em; }
-#start-trigger { display: block; margin-bottom: 0.5em; }
 .label { display: inline-block; width: 10em; }
-#options { position: absolute; top: 1.5em; right: 1em; }
 .testname { color: #999; }
