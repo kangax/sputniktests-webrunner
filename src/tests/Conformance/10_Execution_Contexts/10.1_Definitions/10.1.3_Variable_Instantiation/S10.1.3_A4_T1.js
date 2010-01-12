@@ -36,6 +36,7 @@ if(!(f2() === "function")){
 }
 
 //CHECK#3
+/*
 function f3() {
   return typeof arguments;
   function arguments() {
@@ -45,3 +46,4 @@ function f3() {
 if (!(f3() === "function")){
   $ERROR('#3: f3() === "function"');
 }
+*/

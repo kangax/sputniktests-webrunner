@@ -7,19 +7,17 @@
     <link rel="stylesheet" href="master.css" type="text/css">
   </head>
   <body>
-    <h2>ECMAScript 3 Conformance Test Suite</h2> 
+    <h2>ECMAScript 3 Conformance Test Suite <span>(ver. 0.2)</span></h2> 
     <p class="description">
-      This is a wrapper around <a href="http://code.google.com/p/sputniktests/">"Sputniktests" by Google, Inc.</a>
-      Wrapper allows to run test suite in a browser (created by <a href="http://thinkweb2.com/projects/prototype/">kangax</a>).<br>
-      See <a href="http://thinkweb2.com/projects/prototype/sputniktests-web-runner/">explanatory post</a>.
+      This is a wrapper around <a href="http://code.google.com/p/sputniktests/">"Sputniktests"</a> (by Google) which allows to run test suite in a browser.
+      See <a href="http://thinkweb2.com/projects/prototype/sputniktests-web-runner/">explanatory post</a> on how this wrapper works as well test results of some of the common browsers. Source is <a href="http://github.com/kangax/sputniktests-webrunner/" title="Sputniktests wrapper git repository">hosted on github</a>.
     </p>
+    <span id="author-info">Created by <a href="http://thinkweb2.com/projects/prototype/">kangax</a></span>
     <form>
       <div>
-        Start tests with delay of 
-        <input type="text" value="25" id="test-delay" size="5"> ms
-        <input type="submit" value="Go">
+        <input type="submit" value="Start tests">
       </div>
-    </form>    
+    </form>
     <div id="status"></div>
     <div id="log"></div>
     <script src="runner.js" type="text/javascript"></script>

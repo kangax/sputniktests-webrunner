@@ -1,4 +1,4 @@
-var currentTestName;
+var currentTestName, startTime;
 
 function $ERROR(message) {
   log('ERROR ' + message);
@@ -17,31 +17,44 @@ function $PRINT(message) {
 function log(message) {
   var el = document.createElement('p');
   el.innerHTML = message + ' (<span class="testname">' + currentTestName + '</span>)';
-  document.getElementById('log').appendChild(el);
+  logEl.appendChild(el);
 }
 
 function setStatus(message) {
-  document.getElementById('status').innerHTML = message;
+  statusEl.innerHTML = message;
 }
 
-function loadScript(url, callback) {
-    var script = document.createElement("script"),
-        iframeEl = document.createElement('iframe');
-        
-    script.type = "text/javascript";
-    script.src = url;
+var loadScript = (function(){
+  var uid = 0;
+  return function(url, callback) {
+    var iframeEl = document.createElement('iframe');
+    
+
     iframeEl.style.cssText = 'position:absolute;left:-999em;top:-999em;';
+    iframeEl.id = 'id' + (uid++);
     document.body.appendChild(iframeEl);
     
-    var doc = window.frames[window.frames.length - 1].document;
-    doc.write('<script type="text/javascript">var $ERROR = parent.$ERROR; var $FAIL = parent.$FAIL; var $PRINT = parent.$PRINT;<\/script>');
-    doc.write('<script type="text/javascript" src="' + url + '"><\/script>');
-    doc.close();
-    
     setTimeout(function(){
-      document.body.removeChild(iframeEl);
-    }, REMOVE_IFRAME_DELAY);
-}
+      
+      var doc = window.frames[window.frames.length - 1].document;
+
+      doc.write('<script type="text/javascript">var $ERROR = parent.$ERROR; var $FAIL = parent.$FAIL; var $PRINT = parent.$PRINT;<\/script>');
+      doc.write('<script type="text/javascript" src="' + url + '"><\/script>');
+
+      doc.write([
+        '<script type="text/javascript">',
+          '(function(iframeEl){',
+            'setTimeout(function(){',
+              'parent.pickTest(); iframeEl.parentNode.removeChild(iframeEl);',
+            '}, 10)',
+          '})(this.parent.document.getElementById("' + iframeEl.id + '"))',
+        '<\/script>'
+      ].join(''));
+
+      doc.close();
+    }, 10);
+  }
+})(); 
 
 function prettyTime(seconds) {
   seconds = seconds | 0;
@@ -55,11 +68,11 @@ function prettyTime(seconds) {
 }
 
 var ROOT_DIR              = 'src/tests/Conformance/',
-    TEST_DELAY            = 50,
-    REMOVE_IFRAME_DELAY   = 1000,
     testCount             = 0,
     errorCount            = 0,
     failCount             = 0,
+    logEl                 = document.getElementById('log'),
+    statusEl              = document.getElementById('status'),
     testsToIgnore         = [
       
       /*
@@ -77,6 +90,10 @@ var ROOT_DIR              = 'src/tests/Conformance/',
       '15.4.4.5_Array_prototype_join/S15.4.4.5_A4_T1',
       '15.4.4.5_Array_prototype_join/S15.4.4.5_A4_T2',
       '15.4.4.5_Array_prototype_join/S15.4.4.5_A4_T3',
+      
+      /* Older Netscape (e.g. 7.2) chokes on these */
+      '15.4.4.7_Array_prototype_push/S15.4.4.7_A3',
+      '15.4.5.2_length/S15.4.5.2_A3_T4',
       
       /* These give too many errors in Opera (literally, hundreds or thousands, skewing results too much) */
       '15.1.3.1_decodeURI/S15.1.3.1_A2.3_T1',
@@ -114,41 +131,39 @@ function updateStatus(test) {
       '</li><li><span class="label">Total errors:</span> ', errorCount,
       '</li><li><span class="label">Total failures:</span> ', failCount,
       '</li><li><span class="label">Elapsed time:</span> ', prettyTime((new Date() - startTime) / 1000),
-      '</li><li><span class="label">Status:</span> <span id="status-value">Running tests with <strong>', TEST_DELAY , 'ms</strong> delay</span></li></ul>', 
+      '</li><li><span class="label">Status:</span> <span id="status-value">Running tests&hellip;</span></li>',
+    '</ul>'
   ].join(''));
 }
 
 function displayScore() {
-  var score = errorCount + failCount /*Math.round(100 - ((errorCount + failCount) * 100 / testCount))*/,
+  var score = errorCount + failCount,
       scoreMessage = 'Completed. Final score (errors + failures; less is better): <strong>' + score + '</strong>';
   document.getElementById('status-value').innerHTML = scoreMessage;
 }
 
-function startTests(tests) {
-  function loadTests(tests) {
-    if (tests.length !== 0) {
-      var test = tests.shift();
-      
-      if (!shouldIgnoreTest(test.name)) { 
-        currentTestName = test.name;
-        loadScript(test.path);
-        testCount++;
-      }
-      
+function pickTest() {
+  if (testsQueue.length !== 0) {
+    var test = testsQueue.shift();
+    
+    if (shouldIgnoreTest(test.name)) {
       updateStatus(test);
-      
-      setTimeout(function(){
-        loadTests(tests);
-      }, TEST_DELAY);
+      pickTest();
     }
     else {
-      displayScore();
+      currentTestName = test.name;
+      loadScript(test.path);
+      testCount++; 
+      updateStatus(test);
     }
-  } 
-  loadTests(tests);
+  }
+  else {
+    displayScore();
+  }
 }
+
 function addTests(path, testNames) {
-  for (var i = 0, len = testNames.length; i<len; i++) {
+  for (var i = 0, len = testNames.length; i < len; i++) {
     testsQueue.push({
       path: [ROOT_DIR, path, testNames[i], '.js'].join(''),
       name: path + testNames[i]
@@ -5865,17 +5880,11 @@ addTests('15_Native_ECMA_Script_Objects/15.11_Error_Objects/15.11.4_Properties_o
 
 
 (function(){
-  var formEl = document.forms[0],
-      testDelayValueEl = document.getElementById('test-delay'),
-      startTime;
+  var formEl = document.forms[0];
   formEl.onsubmit = function() {
-    var testDelay = parseInt(testDelayValueEl.value, 10);
-    if (!isNaN(testDelay) && testDelay > 0) {
-      TEST_DELAY = testDelay;
-    }
     formEl.parentNode.removeChild(formEl);
     startTime = new Date();
-    startTests(testsQueue);
+    pickTest();
     return false;
   };
 })();
